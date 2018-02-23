@@ -10,6 +10,9 @@ import UIKit
 
 private let reuseIdentifier = "Cell"
 
+//Searching User : https://api.github.com/search/users?q=ARANACAK USER&page=1&per_page=5
+//Searching Repositories : https://api.github.com/search/repositories?q=ARANACAK REPO&page=1&per_page=5
+
 class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     override func viewDidLoad() {
@@ -19,14 +22,14 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         collectionView?.keyboardDismissMode = .interactive
         self.setSearchBar()
         // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.collectionView!.register(HomeCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     }
     
     func setSearchBar(){
         let width = self.view.frame.width - 40
         let height = 20.0
-        let searchBar :UISearchBar = UISearchBar(frame: CGRect(x: 0.0, y: 0.0, width: width, height: height))
-        searchBar.placeholder = "Your placeholder"
+        let searchBar :UISearchBar = UISearchBar(frame: CGRect(x: 0.0, y: 0.0, width: Double(width), height: height))
+        searchBar.placeholder = "Search Users"
         let leftNavBarButton = UIBarButtonItem(customView:searchBar)
         self.navigationItem.leftBarButtonItem = leftNavBarButton
     }
@@ -59,10 +62,11 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! HomeCell
     
         // Configure the cell
         cell.backgroundColor = UIColor.red
+        cell.setUpViews()
         return cell
     }
     
