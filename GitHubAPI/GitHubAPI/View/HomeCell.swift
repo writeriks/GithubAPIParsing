@@ -10,6 +10,14 @@ import UIKit
 
 class HomeCell: BaseCell {
 
+    var user: User? {
+        didSet {
+            nameLabel.text = user?.userName
+            
+        }
+    }
+    
+    
     let nameLabel : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false

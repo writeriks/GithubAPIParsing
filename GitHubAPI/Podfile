@@ -7,6 +7,5 @@ target 'GitHubAPI' do
 
   # Pods for GitHubAPI
   pod 'Alamofire'
-  pod 'SDWebImage'
   pod 'SwiftyJSON'
 end

@@ -16,6 +16,7 @@
 		5F0662B2203DC0BE009F806E /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0662B1203DC0BE009F806E /* BaseCell.swift */; };
 		5F823962203EFA32002C79A5 /* HomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F823961203EFA32002C79A5 /* HomeCell.swift */; };
 		5F82396420405E26002C79A5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F82396320405E26002C79A5 /* User.swift */; };
+		5F82396620406177002C79A5 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F82396520406177002C79A5 /* APIManager.swift */; };
 		88D75D0C51BB13F983270A46 /* Pods_GitHubAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CFC88DF2C2836033A768D20 /* Pods_GitHubAPI.framework */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		5F0662B1203DC0BE009F806E /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		5F823961203EFA32002C79A5 /* HomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCell.swift; sourceTree = "<group>"; };
 		5F82396320405E26002C79A5 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		5F82396520406177002C79A5 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		E15807A1DD2E903AC624E41C /* Pods-GitHubAPI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubAPI.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GitHubAPI/Pods-GitHubAPI.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				5F06629B203DA8E1009F806E /* AppDelegate.swift */,
+				5F82396520406177002C79A5 /* APIManager.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -219,13 +222,11 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-GitHubAPI/Pods-GitHubAPI-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,6 +280,7 @@
 				5F0662B0203DC0B5009F806E /* Extensions.swift in Sources */,
 				5F06629C203DA8E1009F806E /* AppDelegate.swift in Sources */,
 				5F823962203EFA32002C79A5 /* HomeCell.swift in Sources */,
+				5F82396620406177002C79A5 /* APIManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

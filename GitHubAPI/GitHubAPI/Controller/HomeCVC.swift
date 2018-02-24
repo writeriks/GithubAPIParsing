@@ -15,12 +15,22 @@ private let reuseIdentifier = "Cell"
 
 class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
+    var user : [User]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         collectionView?.backgroundColor = UIColor.yellow
         collectionView?.keyboardDismissMode = .interactive
         self.setSearchBar()
+        
+        APIManager.sharedInstance.getUserWithName(userName: "writer", onSuccess: { (user) in
+            self.user = user
+            print(self.user![0].userName!)
+            self.collectionView?.reloadData()
+        }
+            ,onFailure: { error in
+            print(error.localizedDescription)
+        })
         // Register cell classes
         self.collectionView!.register(HomeCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     }
@@ -33,16 +43,6 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         let leftNavBarButton = UIBarButtonItem(customView:searchBar)
         self.navigationItem.leftBarButtonItem = leftNavBarButton
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let height = (self.view.frame.width-16-16) * 9 / 120
@@ -58,7 +58,7 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return 10
+        return user?.count ?? 0
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -66,8 +66,16 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
         // Configure the cell
         cell.backgroundColor = UIColor.red
-        cell.setUpViews()
+        cell.user = user?[indexPath.item]
         return cell
     }
-    
+    /*
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using [segue destinationViewController].
+     // Pass the selected object to the new view controller.
+     }
+     */
 }
