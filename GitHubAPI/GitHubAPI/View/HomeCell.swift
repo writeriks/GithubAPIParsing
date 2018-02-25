@@ -13,8 +13,14 @@ class HomeCell: BaseCell {
     var user: User? {
         didSet {
             nameLabel.text = user?.userName
-            
+            setUpUserAvatarImage()
         }
+    }
+    
+    func setUpUserAvatarImage(){
+//        if let userAvatarImage = user?.userAvatarImageUrl{
+//            
+//        }
     }
     
     

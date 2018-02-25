@@ -7,33 +7,39 @@
 //
 
 import UIKit
+import Octokit
 
 private let reuseIdentifier = "Cell"
 
 //Searching User : https://api.github.com/search/users?q=ARANACAK USER&page=1&per_page=5
 //Searching Repositories : https://api.github.com/search/repositories?q=ARANACAK REPO&page=1&per_page=5
+// github token : 2dfa66bed9d994c76056afb994fb0da5c496587e
 
-class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     
     var user : [User]?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.yellow
         collectionView?.keyboardDismissMode = .interactive
         self.setSearchBar()
         
-        APIManager.sharedInstance.getUserWithName(userName: "writer", onSuccess: { (user) in
-            self.user = user
-            print(self.user![0].userName!)
-            self.collectionView?.reloadData()
-        }
-            ,onFailure: { error in
-            print(error.localizedDescription)
-        })
+        
+        
         // Register cell classes
         self.collectionView!.register(HomeCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     }
+    
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        APIManager.sharedInstance.getUserWithName(userName: searchBar.text!, onSuccess: { (user) in
+//            self.user = user
+//            self.collectionView?.reloadData()
+//        }
+//            ,onFailure: { error in
+//                print(error.localizedDescription)
+//        })
+//    }
     
     func setSearchBar(){
         let width = self.view.frame.width - 40
@@ -42,6 +48,7 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         searchBar.placeholder = "Search Users"
         let leftNavBarButton = UIBarButtonItem(customView:searchBar)
         self.navigationItem.leftBarButtonItem = leftNavBarButton
+        searchBar.delegate = self
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

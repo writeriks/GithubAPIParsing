@@ -11,7 +11,7 @@ import SwiftyJSON
 
 class User: NSObject{
     var userName:String?
-    var userAvatarImage:String?
+    var userAvatarImageUrl:String?
     var type:String?
     var followers:String?
     var following:String?
@@ -24,7 +24,7 @@ class User: NSObject{
 //        following = json["items"].arrayValue.map({$0["following_url"].stringValue})
         
         userName = json["login"].stringValue
-        userAvatarImage = json["avatar_url"].stringValue
+        userAvatarImageUrl = json["avatar_url"].stringValue
         type = json["type"].stringValue
         followers = json["followers_url"].stringValue
         following = json["following_url"].stringValue

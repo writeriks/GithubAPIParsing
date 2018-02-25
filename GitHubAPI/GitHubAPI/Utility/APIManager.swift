@@ -10,7 +10,7 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 import UIKit
-
+// 2dfa66bed9d994c76056afb994fb0da5c496587e
 class APIManager{
     let baseURL = "https://api.github.com/search"
     static let sharedInstance = APIManager()
@@ -49,5 +49,29 @@ class APIManager{
                 onFailure(response.error?.localizedDescription as! Error)
             }
         }
+    }
+    
+    func loginUser(){
+        let url:String = baseURL + APIManager.getUser + "writeriks" + APIManager.page
+        let plainString = "clientID:2dfa66bed9d994c76056afb994fb0da5c496587e" as NSString
+        let plainData = plainString.data(using: String.Encoding.utf8.rawValue)
+        let base64String = plainData?.base64EncodedString(options: [])//base64EncodedStringWithOptions([])
+        let headers = [
+            "Authorization": "Basic \(String(describing: base64String))",
+            "Content-Type": "application/json"
+        ]
+        
+        let params = [
+            "grant_type": "client_credentials",
+            "scope": "public"
+        ]
+        Alamofire.request(url,parameters:[
+            "client_id"     : "writeriks",
+            "client_secret" : "2dfa66bed9d994c76056afb994fb0da5c496587e",
+            "grant_type"    : "client_credentials"
+            ]).responseString { (response) in
+            <#code#>
+        }
+        
     }
 }
