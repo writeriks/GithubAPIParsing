@@ -7,13 +7,12 @@
 //
 
 import UIKit
-import Octokit
 
 private let reuseIdentifier = "Cell"
 
-//Searching User : https://api.github.com/search/users?q=ARANACAK USER&page=1&per_page=5
+//Searching User : https://api.github.com/search/users?q=ARANACAK&page=1&per_page=5&access_token=f4abebb90f88fe0c3e2cd38e37a6454e74816aad
 //Searching Repositories : https://api.github.com/search/repositories?q=ARANACAK REPO&page=1&per_page=5
-// github token : 2dfa66bed9d994c76056afb994fb0da5c496587e
+// github token : f4abebb90f88fe0c3e2cd38e37a6454e74816aad
 
 class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     
@@ -30,16 +29,26 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
         // Register cell classes
         self.collectionView!.register(HomeCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     }
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        APIManager.sharedInstance.getUserWithName(userName: searchBar.text!, onSuccess: { (user) in
+            self.user = user
+            self.user?.sort(by: { (obj1,obj2 ) -> Bool in
+                return (obj1.userName!) < (obj2.userName!)
+            })
+            self.collectionView?.reloadData()
+        }
+            ,onFailure: { error in
+                print(error.localizedDescription)
+        })
+    }
     
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        APIManager.sharedInstance.getUserWithName(userName: searchBar.text!, onSuccess: { (user) in
-//            self.user = user
-//            self.collectionView?.reloadData()
-//        }
-//            ,onFailure: { error in
-//                print(error.localizedDescription)
-//        })
-//    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+    }
     
     func setSearchBar(){
         let width = self.view.frame.width - 40

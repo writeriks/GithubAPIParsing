@@ -10,16 +10,19 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 import UIKit
-// 2dfa66bed9d994c76056afb994fb0da5c496587e
+//
+// https://api.github.com/search/users?q=writeri&page=1&per_page=5&access_token=f4abebb90f88fe0c3e2cd38e37a6454e74816aad
 class APIManager{
-    let baseURL = "https://api.github.com/search"
     static let sharedInstance = APIManager()
-    static let getUser = "/users?q="
-    static let page = "&page=1&per_page=10"
+    let baseURL = "https://api.github.com"
+    static let search = "/search"
+    static let getUsers = "/users?q="
+    static let pageIndex = "&page=1"
+    static let per_page = "&per_page=20"
+    static let acces_token = "&access_token=f4abebb90f88fe0c3e2cd38e37a6454e74816aad"
     
     func getUserWithName(userName: String, onSuccess:@escaping([User]) -> Void, onFailure:@escaping(Error) -> Void){
         APIManager.sharedInstance.loadData(title: userName, onSuccess: { (json) in
-            print(json)
             var user = [User]()
 //            let a = User(json: json)
 //            print(a.userName!)
@@ -36,42 +39,17 @@ class APIManager{
     }
     
     func loadData(title:String, onSuccess: @escaping(JSON) -> Void, onFailure: @escaping(Error) -> Void){
-        let url:String = baseURL + APIManager.getUser + title + APIManager.page
+        let url:String = baseURL + APIManager.search + APIManager.getUsers + title + APIManager.pageIndex + APIManager.per_page + APIManager.acces_token
         print(url)
         Alamofire.request(url).responseJSON { response in
             if response.result.isSuccess{
                 if let jsn = response.result.value{
-                    let json = JSON(jsn)//Swifty JSON Begins
-                    print(json)
+                    let json = JSON(jsn)
                     onSuccess(json)
                 }
             }else if response.result.isFailure{
                 onFailure(response.error?.localizedDescription as! Error)
             }
         }
-    }
-    
-    func loginUser(){
-        let url:String = baseURL + APIManager.getUser + "writeriks" + APIManager.page
-        let plainString = "clientID:2dfa66bed9d994c76056afb994fb0da5c496587e" as NSString
-        let plainData = plainString.data(using: String.Encoding.utf8.rawValue)
-        let base64String = plainData?.base64EncodedString(options: [])//base64EncodedStringWithOptions([])
-        let headers = [
-            "Authorization": "Basic \(String(describing: base64String))",
-            "Content-Type": "application/json"
-        ]
-        
-        let params = [
-            "grant_type": "client_credentials",
-            "scope": "public"
-        ]
-        Alamofire.request(url,parameters:[
-            "client_id"     : "writeriks",
-            "client_secret" : "2dfa66bed9d994c76056afb994fb0da5c496587e",
-            "grant_type"    : "client_credentials"
-            ]).responseString { (response) in
-            <#code#>
-        }
-        
     }
 }
