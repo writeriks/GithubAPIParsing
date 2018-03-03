@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeCell: BaseCell {
+class UserCell: BaseCell {
 
     var user: User? {
         didSet {
@@ -18,9 +18,13 @@ class HomeCell: BaseCell {
     }
     
     func setUpUserAvatarImage(){
-//        if let userAvatarImage = user?.userAvatarImageUrl{
-//            
-//        }
+        if let userAvatarImageUrl = user?.userAvatarImageUrl{
+            APIManager.sharedInstance.loadImage(url: userAvatarImageUrl, onSuccess: { (image) in
+                self.avatarImageView.image = image
+            }, onFailure: { (error) in
+                print(error.localizedDescription)
+            })
+        }
     }
     
     
@@ -35,7 +39,7 @@ class HomeCell: BaseCell {
     let avatarImageView : UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = UIColor.black
-//        imageView.image = UIImage(named: "Anushka")
+//        imageView.image = UIImage(named: "")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -46,8 +50,10 @@ class HomeCell: BaseCell {
         addSubview(nameLabel)
         
         // avatarImageView Horizontal Constraint
-        addConstraintsWithFormat(format: "H:|-5-[v0(100)]-6-[v1]|", views: avatarImageView,nameLabel)
+        addConstraintsWithFormat(format: "H:|-5-[v0(70)]-10-[v1]|", views: avatarImageView,nameLabel)
         addConstraintsWithFormat(format: "V:|-5-[v0]-5-|", views: avatarImageView)
+        
+//        addConstraintsWithFormat(format: "H:|-5-[v0]-5-[v1]|", views: avatarImageView,nameLabel)
         
         // nameLabel Top Constraint
         addConstraint(NSLayoutConstraint(item: nameLabel, attribute: .centerY, relatedBy: .equal, toItem: self.contentView, attribute: .centerY, multiplier: 1, constant: 0)) // titleLabel'ın üst kısmı, thumbnail imageView'ın 1x8 px altında.

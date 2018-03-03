@@ -8,61 +8,71 @@
 
 import UIKit
 
-private let reuseIdentifier = "Cell"
-
-//Searching User : https://api.github.com/search/users?q=ARANACAK&page=1&per_page=5&access_token=f4abebb90f88fe0c3e2cd38e37a6454e74816aad
-//Searching Repositories : https://api.github.com/search/repositories?q=ARANACAK REPO&page=1&per_page=5
-// github token : f4abebb90f88fe0c3e2cd38e37a6454e74816aad
+private let reuseIdentifierForUser = "UserCell"
+private let reuseIdentifierForRepo = "RepositoryCell"
 
 class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     
     var user : [User]?
-
+    var repository : [Repository]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.yellow
         collectionView?.keyboardDismissMode = .interactive
         self.setSearchBar()
         
-        
-        
         // Register cell classes
-        self.collectionView!.register(HomeCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-    }
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        APIManager.sharedInstance.getUserWithName(userName: searchBar.text!, onSuccess: { (user) in
-            self.user = user
-            self.user?.sort(by: { (obj1,obj2 ) -> Bool in
-                return (obj1.userName!) < (obj2.userName!)
-            })
-            self.collectionView?.reloadData()
-        }
-            ,onFailure: { error in
-                print(error.localizedDescription)
-        })
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
+        self.collectionView!.register(UserCell.self, forCellWithReuseIdentifier: reuseIdentifierForUser)
+        self.collectionView!.register(RepositoryCell.self, forCellWithReuseIdentifier: reuseIdentifierForRepo)
     }
     
     func setSearchBar(){
         let width = self.view.frame.width - 40
         let height = 20.0
         let searchBar :UISearchBar = UISearchBar(frame: CGRect(x: 0.0, y: 0.0, width: Double(width), height: height))
-        searchBar.placeholder = "Search Users"
+        searchBar.placeholder = "Search"
         let leftNavBarButton = UIBarButtonItem(customView:searchBar)
         self.navigationItem.leftBarButtonItem = leftNavBarButton
         searchBar.delegate = self
     }
+    
+    func loadUsersAndRepositories(name:String){
+        
+            APIManager.sharedInstance.getUserWithName(userName: name, onSuccess: { (user) in
+                self.user = user
+                self.user?.sort(by: { (obj1,obj2 ) -> Bool in
+                    return (obj1.id!) < (obj2.id!)
+                })
+                APIManager.sharedInstance.getRepositoryWithName(repositoryName: name, onSuccess: { (repository) in
+                    self.repository = repository
+                    //                print(repository[0].name as Any)
+                    //                print(String(describing : repository[1].user?.id))
+                    self.repository?.sort(by: { (obj1, obj2) -> Bool in
+                        return (obj1.id!) < (obj2.id!)
+                    })
+                    self.collectionView?.reloadData()
+                }) { (error) in
+                    print(error.localizedDescription)
+                }
+            }
+                ,onFailure: { error in
+                    print(error.localizedDescription)
+            })
+        
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        loadUsersAndRepositories(name: searchBar.text!)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let height = (self.view.frame.width-16-16) * 9 / 120
-        return CGSize(width: view.frame.width, height: height+16+68)// collection view uitableview gibi görünmesi için
+        let height = (self.view.frame.width-16-16) * 9 / 32
+        return CGSize(width: view.frame.width-8-8, height: height)// collection view uitableview gibi görünmesi için
     }
     
     // MARK: UICollectionViewDataSource
@@ -71,19 +81,33 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
         return 1
     }
 
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return user?.count ?? 0
+        if user != nil && repository != nil{
+            let count = user!.count + repository!.count
+            return count
+        }else{
+            return user?.count ?? 0
+        }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! HomeCell
-    
+        
         // Configure the cell
-        cell.backgroundColor = UIColor.red
-        cell.user = user?[indexPath.item]
-        return cell
+        if indexPath.row % 2 == 0 {
+            let path = indexPath.item / 2
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierForUser, for: indexPath) as! UserCell
+            cell.backgroundColor = UIColor.red
+            cell.user = user?[path]
+            return cell
+        }else {
+            let path = indexPath.item / 2
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierForRepo, for: indexPath) as! RepositoryCell
+            cell.backgroundColor = UIColor.green
+            cell.repository = repository?[path]
+            return cell
+        }
+        
     }
     /*
      // MARK: - Navigation

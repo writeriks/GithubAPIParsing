@@ -10,6 +10,7 @@ import Foundation
 import SwiftyJSON
 
 class User: NSObject{
+    var id : Int?
     var userName:String?
     var userAvatarImageUrl:String?
     var type:String?
@@ -17,18 +18,32 @@ class User: NSObject{
     var following:String?
     
     init(json:JSON) {
-//        userName = json["items"].arrayValue.map({$0["login"].stringValue})
-//        userAvatarImage = json["items"].arrayValue.map({$0["avatar_url"].stringValue})
-//        type = json["items"].arrayValue.map({$0["type"].stringValue})
-//        followers = json["items"].arrayValue.map({$0["followers_url"].stringValue})
-//        following = json["items"].arrayValue.map({$0["following_url"].stringValue})
-        
+        id = json["id"].intValue
         userName = json["login"].stringValue
         userAvatarImageUrl = json["avatar_url"].stringValue
         type = json["type"].stringValue
         followers = json["followers_url"].stringValue
         following = json["following_url"].stringValue
-        
     }
     
+}
+
+class Repository: NSObject{
+    var id: Int?
+    var name: String?
+    
+    var user: User?
+    
+    init(json:JSON){
+        id = json["id"].intValue
+        name = json["name"].stringValue
+        
+        let items = json["owner"]
+        user = User(json: items)
+        
+//        user?.id = items["id"].intValue
+//        user?.userName = items["login"].stringValue
+//        user?.userAvatarImageUrl = items["avatar_url"].stringValue
+//        
+    }
 }
