@@ -3,17 +3,20 @@ PODS:
   - AlamofireImage (3.3.0):
     - Alamofire (~> 4.5)
   - SwiftyJSON (3.1.4)
+  - UILoadControl (2.1.0)
 
 DEPENDENCIES:
   - Alamofire
   - AlamofireImage
   - SwiftyJSON
+  - UILoadControl
 
 SPEC CHECKSUMS:
   Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
   AlamofireImage: 2e784dc5d00f04903a52c1d169181469c805c3df
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+  UILoadControl: e742ddbe4c67ba1f13b00b7d462d4141307d021f
 
-PODFILE CHECKSUM: 2077177ee3cce2adac8b3a5b1a78c8f69f7c5483
+PODFILE CHECKSUM: 907371f14bd8c486012dc7eb3bf963c8566cf474
 
 COCOAPODS: 1.4.0

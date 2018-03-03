@@ -23,7 +23,6 @@ class APIManager{
     let per_page = "&per_page=20"
     
     func getUserWithName(userName: String, pageIndex:Int, onSuccess:@escaping([User]) -> Void, onFailure:@escaping(Error) -> Void){
-//        let url = baseURL + APIManager.search + APIManager.getUsers + userName + APIManager.pageIndexString + pageIndex + APIManager.per_page
         let urlPart1 = baseURL + search + getUsers + userName
         let urlPart2 = pageIndexString + String(describing : pageIndex) + per_page
         let url = urlPart1 + urlPart2
@@ -42,7 +41,6 @@ class APIManager{
     }
     
     func getRepositoryWithName(repositoryName: String, pageIndex:Int, onSuccess:@escaping([Repository]) -> Void, onFailure:@escaping(Error) -> Void){
-//        let url:String = baseURL + APIManager.search + APIManager.getRepo + repositoryName + APIManager.pageIndexString + pageIndex + APIManager.per_page
         let urlPart1 = baseURL + search + getRepo + repositoryName
         let urlPart2 = pageIndexString + String(describing : pageIndex) + per_page
         let url = urlPart1 + urlPart2

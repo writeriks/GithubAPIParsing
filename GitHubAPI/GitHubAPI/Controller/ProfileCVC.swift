@@ -10,15 +10,18 @@ import UIKit
 
 private let reuseIdentifier = "Cell"
 
-class ProfileCVC: UICollectionViewController {
+class ProfileCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+    
     var user:User?
+    var repository:Repository?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print(String(describing:user?.userName!))
+        self.navigationController?.navigationBar.backgroundColor = UIColor.brown
         // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.collectionView!.register(ProfileCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
-        // Do any additional setup after loading the view.
     }
 
     // MARK: UICollectionViewDataSource
@@ -28,9 +31,13 @@ class ProfileCVC: UICollectionViewController {
         return 1
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: view.frame.height - 60)
+    }
     
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProfileCell
+        cell.backgroundColor = UIColor.red
         // Configure the cell
     
         return cell

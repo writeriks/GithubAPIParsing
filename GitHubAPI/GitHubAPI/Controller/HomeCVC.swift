@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UILoadControl
 
 private let reuseIdentifierForUser = "UserCell"
 private let reuseIdentifierForRepo = "RepositoryCell"
@@ -15,46 +16,62 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
     
     var user = [User]()
     var repository = [Repository]()
-    var index : Int = 1
+    var final = [Final]()
+    
+    var index : Int = 0
     var searchText : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.yellow
         collectionView?.keyboardDismissMode = .interactive
-        self.setSearchBar()
-        self.pullToRefresh()
+        self.setupSearchBar()
+        self.collectionView?.loadControl = UILoadControl(target: self, action: #selector(loadNextPage(sender:)))
+        self.collectionView?.loadControl?.heightLimit = 100.0 //The default is 80.0
+        self.collectionView?.loadControl?.tintColor = UIColor.red
+        self.setupRefreshControl()
         // Register cell classes
-        self.collectionView!.register(UserCell.self, forCellWithReuseIdentifier: reuseIdentifierForUser)
-        self.collectionView!.register(RepositoryCell.self, forCellWithReuseIdentifier: reuseIdentifierForRepo)
+        self.collectionView!.register(HomeCell.self, forCellWithReuseIdentifier: reuseIdentifierForUser)
     }
     
-    func pullToRefresh(){
+    func setupRefreshControl(){
         let refreshControl: UIRefreshControl = {
             let refreshControl = UIRefreshControl()
             refreshControl.addTarget(self, action:
-                #selector(HomeCVC.handleRefresh(_:)),
+                #selector(HomeCVC.loadPreviousPage(_:)),
                                      for: UIControlEvents.valueChanged)
             refreshControl.tintColor = UIColor.red
             return refreshControl
         }()
-        
         self.collectionView?.addSubview(refreshControl)
     }
     
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        scrollView.loadControl?.update()
+    }
     
-    
-    @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
-
+    @objc func loadNextPage(sender: AnyObject?) {
         self.index += 1
         self.loadUsersAndRepositories(name: self.searchText, index: self.index)
+        self.collectionView?.loadControl?.endLoading()
         self.collectionView?.reloadData()
-        refreshControl.endRefreshing()
-        
+    }
+    
+    @objc func loadPreviousPage(_ refreshControl: UIRefreshControl) {
+        self.index -= 1
+        if self.index == 0 {
+                self.index = 1
+                self.loadUsersAndRepositories(name: self.searchText, index: self.index)
+                self.collectionView?.reloadData()
+                refreshControl.endRefreshing()
+        }else{
+            self.loadUsersAndRepositories(name: self.searchText, index: self.index)
+            self.collectionView?.reloadData()
+            refreshControl.endRefreshing()
+        }
     }
 
-    
-    func setSearchBar(){
+    func setupSearchBar(){
         let width = self.view.frame.width - 40
         let height = 20.0
         let searchBar :UISearchBar = UISearchBar(frame: CGRect(x: 0.0, y: 0.0, width: Double(width), height: height))
@@ -65,20 +82,20 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
     }
     
     func loadUsersAndRepositories(name:String, index:Int){
-        
+        self.user.removeAll()
+        self.repository.removeAll()
+        self.final.removeAll()
         APIManager.sharedInstance.getUserWithName(userName: name, pageIndex: index, onSuccess: { (user) in
-            
             self.user.append(contentsOf: user)
-            
             self.user.sort(by: { (obj1,obj2 ) -> Bool in
                     return (obj1.id!) < (obj2.id!)
                 })
             APIManager.sharedInstance.getRepositoryWithName(repositoryName: name, pageIndex: index, onSuccess: { (repository) in
-//                    self.repository = repository
                 self.repository.append(contentsOf: repository)
                 self.repository.sort(by: { (obj1, obj2) -> Bool in
                         return (obj1.id!) < (obj2.id!)
                     })
+                    self.populateResult(user: self.user, repository: self.repository)
                     self.collectionView?.reloadData()
                 }) { (error) in
                     print(error.localizedDescription)
@@ -87,7 +104,22 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
                 ,onFailure: { error in
                     print(error.localizedDescription)
             })
-        
+    }
+    
+    func populateResult(user:[User], repository:[Repository]){
+        for item in user{
+            let element = Final()
+            element.finalUser = item
+            final.append(element)
+        }
+        for item in repository{
+            let element = Final()
+            element.finalRepository = item
+            final.append(element)
+        }
+//        self.final.sort(by: { (obj1, obj2) -> Bool in // BUNU DENE!!!!!!!!!!! SORTING ID
+//            return (obj1.finalUser?.id!) < (obj2.finalRepository?.id!)
+//        })
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
@@ -96,55 +128,43 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.index = 1
         searchBar.resignFirstResponder()
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let height = (self.view.frame.width-16-16) * 9 / 32
-        return CGSize(width: view.frame.width-8-8, height: height)// collection view uitableview gibi görünmesi için
+        return CGSize(width: view.frame.width-8-8, height: height)
     }
     
     // MARK: UICollectionViewDataSource
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-//        if user != nil && repository != nil{
-            let count = user.count + repository.count
-            return count
-//        }else{
-//            return user.count ?? 0
-//        }
+        return self.final.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        // Configure the cell
-        if indexPath.row % 2 == 0 {
-            let path = indexPath.item / 2
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierForUser, for: indexPath) as! UserCell
-            cell.backgroundColor = UIColor.red
-            cell.user = user[path]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierForUser, for: indexPath) as! HomeCell
+        cell.backgroundColor = UIColor.red
+        
+        if self.final[indexPath.row].finalUser != nil {
+            cell.resultUserObject = final[indexPath.row].finalUser
             return cell
-        }else {
-            let path = indexPath.item / 2
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierForRepo, for: indexPath) as! RepositoryCell
-            cell.backgroundColor = UIColor.green
-            cell.repository = repository[path]
+        }else{
+            cell.resultRepositoryObject = final[indexPath.row].finalRepository
             return cell
         }
-        
     }
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using [segue destinationViewController].
-     // Pass the selected object to the new view controller.
-     }
-     */
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let layout = UICollectionViewFlowLayout()
+        let profileCVC = ProfileCVC(collectionViewLayout: layout)
+        profileCVC.user = self.final[indexPath.row].finalUser
+        profileCVC.repository = self.final[indexPath.row].finalRepository
+        self.navigationController?.pushViewController(profileCVC, animated: true)
+    }
 }

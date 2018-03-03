@@ -32,18 +32,19 @@ class Repository: NSObject{
     var id: Int?
     var name: String?
     
-    var user: User?
+    var repositoryUser: User?
     
     init(json:JSON){
         id = json["id"].intValue
         name = json["name"].stringValue
         
         let items = json["owner"]
-        user = User(json: items)
-        
-//        user?.id = items["id"].intValue
-//        user?.userName = items["login"].stringValue
-//        user?.userAvatarImageUrl = items["avatar_url"].stringValue
-//        
+        repositoryUser = User(json: items)
     }
+    
+}
+
+class Final:NSObject{
+    var finalUser : User?
+    var finalRepository : Repository?
 }
