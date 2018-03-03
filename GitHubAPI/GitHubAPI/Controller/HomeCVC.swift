@@ -13,19 +13,46 @@ private let reuseIdentifierForRepo = "RepositoryCell"
 
 class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     
-    var user : [User]?
-    var repository : [Repository]?
+    var user = [User]()
+    var repository = [Repository]()
+    var index : Int = 1
+    var searchText : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.yellow
         collectionView?.keyboardDismissMode = .interactive
         self.setSearchBar()
-        
+        self.pullToRefresh()
         // Register cell classes
         self.collectionView!.register(UserCell.self, forCellWithReuseIdentifier: reuseIdentifierForUser)
         self.collectionView!.register(RepositoryCell.self, forCellWithReuseIdentifier: reuseIdentifierForRepo)
     }
+    
+    func pullToRefresh(){
+        let refreshControl: UIRefreshControl = {
+            let refreshControl = UIRefreshControl()
+            refreshControl.addTarget(self, action:
+                #selector(HomeCVC.handleRefresh(_:)),
+                                     for: UIControlEvents.valueChanged)
+            refreshControl.tintColor = UIColor.red
+            return refreshControl
+        }()
+        
+        self.collectionView?.addSubview(refreshControl)
+    }
+    
+    
+    
+    @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+
+        self.index += 1
+        self.loadUsersAndRepositories(name: self.searchText, index: self.index)
+        self.collectionView?.reloadData()
+        refreshControl.endRefreshing()
+        
+    }
+
     
     func setSearchBar(){
         let width = self.view.frame.width - 40
@@ -37,18 +64,19 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
         searchBar.delegate = self
     }
     
-    func loadUsersAndRepositories(name:String){
+    func loadUsersAndRepositories(name:String, index:Int){
         
-            APIManager.sharedInstance.getUserWithName(userName: name, onSuccess: { (user) in
-                self.user = user
-                self.user?.sort(by: { (obj1,obj2 ) -> Bool in
+        APIManager.sharedInstance.getUserWithName(userName: name, pageIndex: index, onSuccess: { (user) in
+            
+            self.user.append(contentsOf: user)
+            
+            self.user.sort(by: { (obj1,obj2 ) -> Bool in
                     return (obj1.id!) < (obj2.id!)
                 })
-                APIManager.sharedInstance.getRepositoryWithName(repositoryName: name, onSuccess: { (repository) in
-                    self.repository = repository
-                    //                print(repository[0].name as Any)
-                    //                print(String(describing : repository[1].user?.id))
-                    self.repository?.sort(by: { (obj1, obj2) -> Bool in
+            APIManager.sharedInstance.getRepositoryWithName(repositoryName: name, pageIndex: index, onSuccess: { (repository) in
+//                    self.repository = repository
+                self.repository.append(contentsOf: repository)
+                self.repository.sort(by: { (obj1, obj2) -> Bool in
                         return (obj1.id!) < (obj2.id!)
                     })
                     self.collectionView?.reloadData()
@@ -63,7 +91,8 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        loadUsersAndRepositories(name: searchBar.text!)
+        self.searchText = searchBar.text!
+        loadUsersAndRepositories(name: self.searchText, index: self.index)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -83,12 +112,12 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        if user != nil && repository != nil{
-            let count = user!.count + repository!.count
+//        if user != nil && repository != nil{
+            let count = user.count + repository.count
             return count
-        }else{
-            return user?.count ?? 0
-        }
+//        }else{
+//            return user.count ?? 0
+//        }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -98,13 +127,13 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
             let path = indexPath.item / 2
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierForUser, for: indexPath) as! UserCell
             cell.backgroundColor = UIColor.red
-            cell.user = user?[path]
+            cell.user = user[path]
             return cell
         }else {
             let path = indexPath.item / 2
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierForRepo, for: indexPath) as! RepositoryCell
             cell.backgroundColor = UIColor.green
-            cell.repository = repository?[path]
+            cell.repository = repository[path]
             return cell
         }
         

@@ -18,6 +18,7 @@ class UserCell: BaseCell {
     }
     
     func setUpUserAvatarImage(){
+        
         if let userAvatarImageUrl = user?.userAvatarImageUrl{
             APIManager.sharedInstance.loadImage(url: userAvatarImageUrl, onSuccess: { (image) in
                 self.avatarImageView.image = image

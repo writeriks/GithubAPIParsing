@@ -16,14 +16,17 @@ class APIManager{
     static let sharedInstance = APIManager()
     
     let baseURL = "https://api.github.com"
-    static let search = "/search"
-    static let getUsers = "/users?q="
-    static let getRepo = "/repositories?q="
-    static let pageIndex = "&page=1"
-    static let per_page = "&per_page=20"
+    let search = "/search"
+    let getUsers = "/users?q="
+    let getRepo = "/repositories?q="
+    let pageIndexString = "&page="
+    let per_page = "&per_page=20"
     
-    func getUserWithName(userName: String, onSuccess:@escaping([User]) -> Void, onFailure:@escaping(Error) -> Void){
-        let url:String = baseURL + APIManager.search + APIManager.getUsers + userName + APIManager.pageIndex + APIManager.per_page
+    func getUserWithName(userName: String, pageIndex:Int, onSuccess:@escaping([User]) -> Void, onFailure:@escaping(Error) -> Void){
+//        let url = baseURL + APIManager.search + APIManager.getUsers + userName + APIManager.pageIndexString + pageIndex + APIManager.per_page
+        let urlPart1 = baseURL + search + getUsers + userName
+        let urlPart2 = pageIndexString + String(describing : pageIndex) + per_page
+        let url = urlPart1 + urlPart2
         APIManager.sharedInstance.loadData(url: url, onSuccess: { (json) in
             var user = [User]()
             let items = json["items"]
@@ -38,8 +41,12 @@ class APIManager{
         }
     }
     
-    func getRepositoryWithName(repositoryName: String, onSuccess:@escaping([Repository]) -> Void, onFailure:@escaping(Error) -> Void){
-        let url:String = baseURL + APIManager.search + APIManager.getRepo + repositoryName + APIManager.pageIndex + APIManager.per_page
+    func getRepositoryWithName(repositoryName: String, pageIndex:Int, onSuccess:@escaping([Repository]) -> Void, onFailure:@escaping(Error) -> Void){
+//        let url:String = baseURL + APIManager.search + APIManager.getRepo + repositoryName + APIManager.pageIndexString + pageIndex + APIManager.per_page
+        let urlPart1 = baseURL + search + getRepo + repositoryName
+        let urlPart2 = pageIndexString + String(describing : pageIndex) + per_page
+        let url = urlPart1 + urlPart2
+        
         APIManager.sharedInstance.loadData(url: url, onSuccess: { (json) in
             var repositories = [Repository]()
             let items = json["items"]
