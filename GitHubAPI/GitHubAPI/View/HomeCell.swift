@@ -64,7 +64,6 @@ class HomeCell: BaseCell {
     let avatarImageView : UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = UIColor.black
-        //        imageView.image = UIImage(named: "")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView

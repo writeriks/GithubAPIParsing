@@ -27,7 +27,6 @@ class ProfileCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         return 1
     }
 
