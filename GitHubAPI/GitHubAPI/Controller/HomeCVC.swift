@@ -98,11 +98,11 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
                     self.populateResult(user: self.user, repository: self.repository)
                     self.collectionView?.reloadData()
                 }) { (error) in
-                    print(error.localizedDescription)
+                    self.createAlert(title: "Error", message: error.localizedDescription, actionTitle: "OK")
                 }
             }
                 ,onFailure: { error in
-                    print(error.localizedDescription)
+                    self.createAlert(title: "Error", message: error.localizedDescription, actionTitle: "OK")
             })
     }
     
@@ -117,9 +117,23 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
             element.finalRepository = item
             final.append(element)
         }
-//        self.final.sort(by: { (obj1, obj2) -> Bool in // BUNU DENE!!!!!!!!!!! SORTING ID
-//            return (obj1.finalUser?.id!) < (obj2.finalRepository?.id!)
-//        })
+        final.sort { (f1, f2) -> Bool in
+            return sortFinalArray(f1: f1, f2: f2)
+        }
+    }
+    
+    func sortFinalArray(f1:Final, f2:Final) -> Bool{
+        if f1.finalUser != nil && f2.finalUser != nil {
+            return (f1.finalUser!.id)! < (f2.finalUser!.id)!
+        }else if f1.finalUser != nil && f2.finalRepository != nil{
+            return (f1.finalUser!.id)! < (f2.finalRepository!.repositoryUser!.id)!
+        }else if f1.finalRepository != nil && f2.finalUser != nil{
+            return (f1.finalRepository!.id)! < (f2.finalUser!.id)!
+        }else if f1.finalRepository != nil && f2.finalRepository != nil {
+            return (f1.finalRepository!.id)! < (f2.finalRepository!.id)!
+        }else{
+            return false
+        }
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {

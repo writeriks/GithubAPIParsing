@@ -14,16 +14,16 @@ class User: NSObject{
     var userName:String?
     var userAvatarImageUrl:String?
     var type:String?
-    var followers:String?
-    var following:String?
+    var followers:Int?
+    var starred_url : String?
     
     init(json:JSON) {
         id = json["id"].intValue
         userName = json["login"].stringValue
         userAvatarImageUrl = json["avatar_url"].stringValue
         type = json["type"].stringValue
-        followers = json["followers_url"].stringValue
-        following = json["following_url"].stringValue
+        followers = json["followers"].intValue
+//        starred_url = json["starred_url"].stringValue
     }
     
 }
@@ -31,20 +31,20 @@ class User: NSObject{
 class Repository: NSObject{
     var id: Int?
     var name: String?
-    
+    var stars : Int?
     var repositoryUser: User?
     
     init(json:JSON){
         id = json["id"].intValue
         name = json["name"].stringValue
-        
+        stars = json["stargazers_count"].intValue
         let items = json["owner"]
         repositoryUser = User(json: items)
     }
     
 }
 
-class Final:NSObject{
+class Final: NSObject{
     var finalUser : User?
     var finalRepository : Repository?
 }

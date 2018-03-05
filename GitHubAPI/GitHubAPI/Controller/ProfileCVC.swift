@@ -17,8 +17,8 @@ class ProfileCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(String(describing:user?.userName!))
         self.navigationController?.navigationBar.backgroundColor = UIColor.brown
+        self.title = user?.userName
         // Register cell classes
         self.collectionView!.register(ProfileCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
@@ -40,6 +40,13 @@ class ProfileCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
         cell.backgroundColor = UIColor.red
         // Configure the cell
     
-        return cell
+        if self.user != nil {
+            cell.resultUserObject = user
+            return cell
+        }else{
+            cell.resultRepositoryObject = repository
+            return cell
+        }
+        
     }
 }

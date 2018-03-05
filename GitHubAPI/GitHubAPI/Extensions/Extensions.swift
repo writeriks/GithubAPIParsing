@@ -15,7 +15,7 @@ extension UIColor {
 }
 
 extension UIView {
-    func addConstraintsWithFormat(format:String, views:UIView...){
+    func addConstraintsWithFormat(format:String, options:NSLayoutFormatOptions, views:UIView...){
         var viewsDictionary = [String:UIView]()
         for (index,view) in views.enumerated(){
             let key = "v\(index)"
@@ -23,11 +23,19 @@ extension UIView {
             viewsDictionary[key] = view
         }
         
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views:viewsDictionary))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: options, metrics: nil, views:viewsDictionary))
     }
 }
 
-extension UICollectionViewController {
+extension UICollectionViewCell{
+    func createAlert(title:String, message:String, actionTitle:String){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.default, handler: nil))
+        self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
+}
+
+extension UICollectionViewController{
     func createAlert(title:String, message:String, actionTitle:String){
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.default, handler: nil))
