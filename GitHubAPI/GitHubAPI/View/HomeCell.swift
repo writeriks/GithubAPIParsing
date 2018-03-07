@@ -25,6 +25,7 @@ class HomeCell: BaseCell {
             setupUserAvatarImage()
         }
     }
+    
     func setupUserAvatarImage(){
         if let userAvatarImageUrl = resultRepositoryObject?.repositoryUser?.userAvatarImageUrl{
             APIManager.sharedInstance.loadImage(url: userAvatarImageUrl, onSuccess: { (image) in
@@ -41,7 +42,6 @@ class HomeCell: BaseCell {
             })
         }
     }
-    
     
     let nameLabel : UILabel = {
         let label = UILabel()

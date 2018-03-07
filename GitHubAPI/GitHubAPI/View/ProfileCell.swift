@@ -11,103 +11,22 @@ import UIKit
 class ProfileCell: BaseCell {
     var resultRepositoryObject: Repository? {
         didSet {
-            setupUserProfile()
-            setupUserAvatarImage()
-            self.setupStars(pageIndex: 1)
+            nameLabel.text = resultRepositoryObject?.repositoryUser?.userName
+            numberOfFollowersLabel.text = "Followers : " + String(describing: (resultRepositoryObject?.repositoryUser?.followers)!)
+            if resultRepositoryObject?.repositoryUser?.profileImage != nil{
+                avatarImageView.image = resultRepositoryObject?.repositoryUser?.profileImage
+            }
+            numberOfStarsLabel.text = "Stars : " + String(describing: (resultRepositoryObject?.repositoryUser?.starCount)!)
         }
     }
     var resultUserObject: User? {
         didSet {
-            setupUserProfile()
-            setupUserAvatarImage()
-            self.setupStars(pageIndex: 1)
-        }
-    }
-    var starCount : Int = 0
-    
-    func setupUserProfile(){
-        if let user = resultUserObject{
-            APIManager.sharedInstance.getSpecificUser(userName: (user.userName)!, onSuccess: { (user) in
-                let user = user
-                DispatchQueue.main.async {
-                    self.nameLabel.text = user.userName
-                    self.numberOfFollowersLabel.text = "Followers : " + String(describing : user.followers!)
-                }
-            }, onFailure: { (error) in
-                self.createAlert(title: "Error", message: error.localizedDescription, actionTitle: "OK")
-            })
-        }
-        if let repository = resultRepositoryObject{
-            APIManager.sharedInstance.getSpecificUser(userName: (repository.repositoryUser?.userName)!, onSuccess: { (user) in
-                let user = user
-                DispatchQueue.main.async {
-                    self.nameLabel.text = user.userName
-                    self.numberOfFollowersLabel.text = "Followers : " + String(describing : user.followers!)
-                }
-            }, onFailure: { (error) in
-                self.createAlert(title: "Error", message: error.localizedDescription, actionTitle: "OK")
-            })
-        }
-    }
-    
-    func setupUserAvatarImage(){
-        if let userAvatarImageUrl = resultRepositoryObject?.repositoryUser?.userAvatarImageUrl{
-            APIManager.sharedInstance.loadImage(url: userAvatarImageUrl, onSuccess: { (image) in
-                DispatchQueue.main.async {
-                self.avatarImageView.image = image
-                }
-            }, onFailure: { (error) in
-                self.createAlert(title: "Error", message: error.localizedDescription, actionTitle: "OK")
-            })
-        }
-        if let userAvatarImageUrl = resultUserObject?.userAvatarImageUrl{
-            APIManager.sharedInstance.loadImage(url: userAvatarImageUrl, onSuccess: { (image) in
-                DispatchQueue.main.async {
-                    self.avatarImageView.image = image
-                }
-            }, onFailure: { (error) in
-                self.createAlert(title: "Error", message: error.localizedDescription, actionTitle: "OK")
-            })
-        }
-    }
-    
-    func setupStars(pageIndex:Int) {
-        var index = pageIndex
-        
-        if let user = self.resultUserObject{
-            APIManager.sharedInstance.getListOfReposForSpecificUser(userName: (user.userName)!, page: pageIndex, onSuccess: { (repository) in
-                    if !repository.isEmpty{
-                        for item in repository{
-                            self.starCount += item.stars!
-                        }
-                        index += 1
-                        self.setupStars(pageIndex: index)
-                    }else{
-                        DispatchQueue.main.async {
-                        self.numberOfStarsLabel.text =  "Stars : " + String(describing: self.starCount)
-                        }
-                }
-                
-            }, onFailure: { (error) in
-                self.createAlert(title: "Error", message: error.localizedDescription, actionTitle: "OK")
-            })
-        }
-        if let repository = self.resultRepositoryObject{
-            APIManager.sharedInstance.getListOfReposForSpecificUser(userName: (repository.repositoryUser?.userName)!, page: pageIndex, onSuccess: { (repository) in
-                if !repository.isEmpty{
-                    for item in repository{
-                        self.starCount += item.stars!
-                    }
-                    index += 1
-                    self.setupStars(pageIndex: index)
-                }else{
-                    DispatchQueue.main.async {
-                    self.numberOfStarsLabel.text =  "Stars : " + String(describing: self.starCount)
-                    }
-                }
-            }, onFailure: { (error) in
-                self.createAlert(title: "Error", message: error.localizedDescription, actionTitle: "OK")
-            })
+            nameLabel.text = resultUserObject?.userName
+            numberOfFollowersLabel.text = "Followers : " + String(describing: (resultUserObject?.followers)!)
+            if resultUserObject?.profileImage != nil{
+                avatarImageView.image =  (resultUserObject?.profileImage)!
+            }
+            numberOfStarsLabel.text = "Stars : " + String(describing: (resultUserObject?.starCount)!)
         }
     }
     

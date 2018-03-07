@@ -16,6 +16,8 @@ class User: NSObject{
     var type:String?
     var followers:Int?
     var starred_url : String?
+    var starCount : Int = 0
+    var profileImage: UIImage?
     
     init(json:JSON) {
         id = json["id"].intValue
@@ -23,7 +25,6 @@ class User: NSObject{
         userAvatarImageUrl = json["avatar_url"].stringValue
         type = json["type"].stringValue
         followers = json["followers"].intValue
-//        starred_url = json["starred_url"].stringValue
     }
     
 }
