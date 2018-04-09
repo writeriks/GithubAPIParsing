@@ -27,10 +27,10 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
         collectionView?.keyboardDismissMode = .interactive
         self.setupSearchBar()
         self.collectionView?.loadControl = UILoadControl(target: self, action: #selector(loadNextPage(sender:)))
-        self.collectionView?.loadControl?.heightLimit = 100.0 //The default is 80.0
+        self.collectionView?.loadControl?.heightLimit = 100.0
         self.collectionView?.loadControl?.tintColor = UIColor.red
         self.setupRefreshControl()
-        // Register cell classes
+        
         self.collectionView!.register(HomeCell.self, forCellWithReuseIdentifier: reuseIdentifierForUser)
     }
     
@@ -151,7 +151,7 @@ class HomeCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, U
         return CGSize(width: view.frame.width-8-8, height: height)
     }
     
-    // MARK: UICollectionViewDataSource
+    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }

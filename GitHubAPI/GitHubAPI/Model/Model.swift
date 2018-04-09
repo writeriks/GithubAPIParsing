@@ -26,7 +26,6 @@ class User: NSObject{
         type = json["type"].stringValue
         followers = json["followers"].intValue
     }
-    
 }
 
 class Repository: NSObject{
@@ -42,10 +41,9 @@ class Repository: NSObject{
         let items = json["owner"]
         repositoryUser = User(json: items)
     }
-    
 }
 
 class Final: NSObject{
-    var finalUser : User?
-    var finalRepository : Repository?
+    weak var finalUser : User?
+    weak var finalRepository : Repository?
 }

@@ -23,7 +23,7 @@ class ProfileCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
         setupUserProfile()
         self.setupStars(pageIndex: 1)
         setupUserAvatarImage()
-        // Register cell classes
+        
         self.collectionView!.register(ProfileCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
     }
@@ -101,7 +101,7 @@ class ProfileCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
         }
     }
     
-    // MARK: UICollectionViewDataSource
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }

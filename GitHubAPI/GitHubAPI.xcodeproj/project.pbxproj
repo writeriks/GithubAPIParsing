@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5F06629C203DA8E1009F806E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F06629B203DA8E1009F806E /* AppDelegate.swift */; };
-		5F0662A1203DA8E1009F806E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F06629F203DA8E1009F806E /* Main.storyboard */; };
 		5F0662A3203DA8E1009F806E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F0662A2203DA8E1009F806E /* Assets.xcassets */; };
 		5F0662A6203DA8E1009F806E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F0662A4203DA8E1009F806E /* LaunchScreen.storyboard */; };
 		5F0662AE203DBB33009F806E /* HomeCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0662AD203DBB33009F806E /* HomeCVC.swift */; };
@@ -27,7 +26,6 @@
 		320D1C62F02E781837CF411E /* Pods-GitHubAPI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubAPI.release.xcconfig"; path = "Pods/Target Support Files/Pods-GitHubAPI/Pods-GitHubAPI.release.xcconfig"; sourceTree = "<group>"; };
 		5F066298203DA8E1009F806E /* GitHubAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F06629B203DA8E1009F806E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5F0662A0203DA8E1009F806E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5F0662A2203DA8E1009F806E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5F0662A5203DA8E1009F806E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5F0662A7203DA8E1009F806E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -90,7 +88,6 @@
 				5F0662B6203DC10C009F806E /* Extensions */,
 				5F0662B7203DC121009F806E /* Utility */,
 				5F115AF52048BC19004E3625 /* API */,
-				5F06629F203DA8E1009F806E /* Main.storyboard */,
 				5F0662A4203DA8E1009F806E /* LaunchScreen.storyboard */,
 				5F0662A7203DA8E1009F806E /* Info.plist */,
 			);
@@ -221,7 +218,6 @@
 			files = (
 				5F0662A6203DA8E1009F806E /* LaunchScreen.storyboard in Resources */,
 				5F0662A3203DA8E1009F806E /* Assets.xcassets in Resources */,
-				5F0662A1203DA8E1009F806E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,14 +303,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		5F06629F203DA8E1009F806E /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5F0662A0203DA8E1009F806E /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		5F0662A4203DA8E1009F806E /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
